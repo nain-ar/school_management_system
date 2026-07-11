@@ -1,0 +1,72 @@
+/* Background */
+
+.stApp{
+    background:linear-gradient(135deg,#EEF5FF,#D6E4FF);
+}
+
+/* Title */
+
+.main-title{
+    text-align:center;
+    font-size:42px;
+    font-weight:bold;
+    color:#1E3A8A;
+}
+
+.sub-title{
+    text-align:center;
+    color:#64748B;
+    margin-bottom:40px;
+}
+
+/* Card */
+
+.role-card{
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:40px;
+
+    text-align:center;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.12);
+
+    transition:.3s;
+
+    cursor:pointer;
+
+    border:2px solid transparent;
+
+    margin-bottom:25px;
+
+}
+
+.role-card:hover{
+
+    transform:translateY(-8px);
+
+    border-color:#2563EB;
+
+    box-shadow:0 15px 30px rgba(0,0,0,.18);
+
+}
+
+.role-icon{
+
+    font-size:65px;
+
+}
+
+.role-name{
+
+    margin-top:20px;
+
+    font-size:28px;
+
+    font-weight:bold;
+
+    color:#1E293B;
+
+}

@@ -1,0 +1,12 @@
+streamlit
+mysql-connector-python
+bcrypt
+python-dotenv
+pandas
+plotly
+google-generativeai
+qrcode
+Pillow
+reportlab
+opencv-python
+streamlit-option-menu
