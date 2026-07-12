@@ -1,10 +1,6 @@
-import mysql.connector
-from mysql.connector import Error
-from dotenv import load_dotenv
+import sqlite3
 import os
 
-# Load .env file
-load_dotenv()
 
 class Database:
 
@@ -14,31 +10,30 @@ class Database:
 
     def connect(self):
         try:
-            self.connection = mysql.connector.connect(
-                host=os.getenv("DB_HOST"),
-                user=os.getenv("DB_USER"),
-                password=os.getenv("DB_PASSWORD"),
-                database=os.getenv("DB_NAME")
-            )
+            # Create database folder if it doesn't exist
+            os.makedirs("database", exist_ok=True)
 
-            if self.connection.is_connected():
-                self.cursor = self.connection.cursor()
-                return True
+            # Connect to SQLite database
+            self.connection = sqlite3.connect("database/school_management.db")
+            self.cursor = self.connection.cursor()
 
-        except Error as e:
+            print("Connected to SQLite successfully!")
+            return True
+
+        except sqlite3.Error as e:
             print("Database Error:", e)
             return False
 
     def execute(self, query, values=None):
         try:
-            if values:
+            if values is not None:
                 self.cursor.execute(query, values)
             else:
                 self.cursor.execute(query)
 
             self.connection.commit()
 
-        except Error as e:
+        except sqlite3.Error as e:
             print("Execute Error:", e)
 
     def fetchone(self):
@@ -48,6 +43,8 @@ class Database:
         return self.cursor.fetchall()
 
     def close(self):
-        if self.connection and self.connection.is_connected():
+        if self.cursor:
             self.cursor.close()
+
+        if self.connection:
             self.connection.close()
