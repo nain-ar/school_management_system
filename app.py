@@ -4,7 +4,12 @@ from pages.welcome import show_welcome
 from pages.login import show_login
 from database.db import create_tables
 from pages.student import show_students
-
+from pages.teachers import show_teachers
+from pages.parents import show_parents
+from pages.fees import show_fees 
+from pages.attendence import show_attendance
+from pages.exams  import show_exams
+from pages.studentid import show_id_card
 create_tables()
 st.set_page_config(
     page_title="School Management System",
@@ -79,7 +84,19 @@ elif st.session_state.page == "dashboard":
     show_dashboard()
 elif st.session_state.page == "students":
     show_students()
+elif st.session_state.page == "teachers":
+    show_teachers()
 
+elif st.session_state.page == "parents":
+    show_parents()
+elif st.session_state.page == "fees":
+    show_fees()
+elif st.session_state.page == "attendence":
+    show_attendance()
+elif st.session_state.page == "exams":
+    show_exams()
+elif st.session_state.page == "id_card":
+    show_id_card()
 def load_css():
 
     with open("assets/css/style.css") as f:

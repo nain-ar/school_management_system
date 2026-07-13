@@ -1,69 +1,69 @@
 from database.database import Database
 
 
-class Attendance:
+class Subject:
 
     def __init__(self):
         self.db = Database()
         self.db.connect()
 
     # ==========================
-    # Mark Attendance
+    # Add Subject
     # ==========================
-    def mark_attendance(
+    def add_subject(
         self,
-        student_id,
+        subject_code,
+        subject_name,
         class_name,
-        attendance_date,
-        status,
-        remarks
+        teacher_id,
+        credits
     ):
 
         query = """
-        INSERT INTO attendance(
-            student_id,
+        INSERT INTO subjects(
+            subject_code,
+            subject_name,
             class_name,
-            attendance_date,
-            status,
-            remarks
+            teacher_id,
+            credits
         )
         VALUES(?,?,?,?,?)
         """
 
         self.db.execute(query, (
-            student_id,
+            subject_code,
+            subject_name,
             class_name,
-            attendance_date,
-            status,
-            remarks
+            teacher_id,
+            credits
         ))
 
     # ==========================
-    # View Attendance
+    # View Subjects
     # ==========================
-    def get_all_attendance(self):
+    def get_all_subjects(self):
 
         self.db.execute("""
             SELECT *
-            FROM attendance
-            ORDER BY attendance_date DESC
+            FROM subjects
+            ORDER BY subject_id DESC
         """)
 
         return self.db.fetchall()
 
     # ==========================
-    # Search Attendance
+    # Search Subject
     # ==========================
-    def search_attendance(self, keyword):
+    def search_subject(self, keyword):
 
         value = f"%{keyword}%"
 
         self.db.execute("""
             SELECT *
-            FROM attendance
-            WHERE class_name LIKE ?
-               OR status LIKE ?
-               OR attendance_date LIKE ?
+            FROM subjects
+            WHERE subject_code LIKE ?
+               OR subject_name LIKE ?
+               OR class_name LIKE ?
         """, (
             value,
             value,
@@ -73,21 +73,23 @@ class Attendance:
         return self.db.fetchall()
 
     # ==========================
-    # Delete Attendance
+    # Delete Subject
     # ==========================
-    def delete_attendance(self, attendance_id):
+    def delete_subject(self, subject_id):
 
         self.db.execute(
-            "DELETE FROM attendance WHERE attendance_id=?",
-            (attendance_id,)
+            "DELETE FROM subjects WHERE subject_id=?",
+            (subject_id,)
         )
 
     # ==========================
-    # Total Attendance Records
+    # Total Subjects
     # ==========================
-    def total_attendance(self):
+    def total_subjects(self):
 
-        self.db.execute("SELECT COUNT(*) FROM attendance")
+        self.db.execute(
+            "SELECT COUNT(*) FROM subjects"
+        )
 
         result = self.db.fetchone()
 

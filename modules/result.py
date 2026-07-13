@@ -1,30 +1,30 @@
 from database.database import Database
 
 
-class Attendance:
+class Result:
 
     def __init__(self):
         self.db = Database()
         self.db.connect()
 
     # ==========================
-    # Mark Attendance
+    # Add Result
     # ==========================
-    def mark_attendance(
+    def add_result(
         self,
         student_id,
-        class_name,
-        attendance_date,
-        status,
+        exam_id,
+        marks_obtained,
+        grade,
         remarks
     ):
 
         query = """
-        INSERT INTO attendance(
+        INSERT INTO results(
             student_id,
-            class_name,
-            attendance_date,
-            status,
+            exam_id,
+            marks_obtained,
+            grade,
             remarks
         )
         VALUES(?,?,?,?,?)
@@ -32,38 +32,38 @@ class Attendance:
 
         self.db.execute(query, (
             student_id,
-            class_name,
-            attendance_date,
-            status,
+            exam_id,
+            marks_obtained,
+            grade,
             remarks
         ))
 
     # ==========================
-    # View Attendance
+    # View Results
     # ==========================
-    def get_all_attendance(self):
+    def get_all_results(self):
 
         self.db.execute("""
             SELECT *
-            FROM attendance
-            ORDER BY attendance_date DESC
+            FROM results
+            ORDER BY result_id DESC
         """)
 
         return self.db.fetchall()
 
     # ==========================
-    # Search Attendance
+    # Search Results
     # ==========================
-    def search_attendance(self, keyword):
+    def search_result(self, keyword):
 
         value = f"%{keyword}%"
 
         self.db.execute("""
             SELECT *
-            FROM attendance
-            WHERE class_name LIKE ?
-               OR status LIKE ?
-               OR attendance_date LIKE ?
+            FROM results
+            WHERE student_id LIKE ?
+               OR exam_id LIKE ?
+               OR grade LIKE ?
         """, (
             value,
             value,
@@ -73,21 +73,23 @@ class Attendance:
         return self.db.fetchall()
 
     # ==========================
-    # Delete Attendance
+    # Delete Result
     # ==========================
-    def delete_attendance(self, attendance_id):
+    def delete_result(self, result_id):
 
         self.db.execute(
-            "DELETE FROM attendance WHERE attendance_id=?",
-            (attendance_id,)
+            "DELETE FROM results WHERE result_id=?",
+            (result_id,)
         )
 
     # ==========================
-    # Total Attendance Records
+    # Total Results
     # ==========================
-    def total_attendance(self):
+    def total_results(self):
 
-        self.db.execute("SELECT COUNT(*) FROM attendance")
+        self.db.execute(
+            "SELECT COUNT(*) FROM results"
+        )
 
         result = self.db.fetchone()
 

@@ -7,19 +7,7 @@ from database.database import Database
 # ===============================
 def stat_card(title, value, icon):
 
-#     st.markdown(f"""
-#     <div class="stat-card">
 
-#         <div class="icon">
-#             {icon}
-#         </div>
-
-#         <h2>{value}</h2>
-
-#         <p>{title}</p>
-
-#     </div>
-#     """, unsafe_allow_html=True)
     st.markdown(
 f"""
 <div class="stat-card">
@@ -37,17 +25,7 @@ unsafe_allow_html=True
 # ===============================
 def module_card(title, icon, page=None):
 
-    # st.markdown(f"""
-    # <div class="module-card">
-
-    #     <div class="module-icon">
-    #         {icon}
-    #     </div>
-
-    #     <h3>{title}</h3>
-
-    # </div>
-    # """, unsafe_allow_html=True)
+ 
     st.markdown(
 f"""
 <div class="module-card">
@@ -78,19 +56,19 @@ def get_count(table_name):
 
     db = Database()
 
-    if db.connect():
+    if not db.connect():
+        return 0
 
-        db.execute(
-            f"SELECT COUNT(*) FROM {table_name}"
-        )
+    db.execute(f"SELECT COUNT(*) FROM {table_name}")
 
-        result = db.fetchone()
+    result = db.fetchone()
 
-        db.close()
+    db.close()
 
-        return result[0]
+    if result is None:
+        return 0
 
-    return 0
+    return result[0]
 
 
 
@@ -196,6 +174,7 @@ def show_dashboard():
         )
 
 
+
     with c2:
         stat_card(
             "Teachers",
@@ -298,7 +277,11 @@ def show_dashboard():
             "reports"
         )
 
-
+    module_card(
+    "Student ID",
+    "🆔",
+    "id_card"
+)
 
     st.divider()
 

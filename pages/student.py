@@ -6,7 +6,7 @@ from modules.student import Student
 def show_students():
 
     student = Student()
-
+    
     st.title("🎓 Student Management")
 
     tab1, tab2, tab3, tab4 = st.tabs([
@@ -189,3 +189,15 @@ def show_students():
             )
 
             st.success("Student Deleted Successfully!")
+        
+    st.divider()
+
+    _, col, _ = st.columns([1, 2, 1])
+
+    with col:
+        if st.button(
+            "⬅ Back to Dashboard",
+            use_container_width=True
+        ):
+            st.session_state.page = "dashboard"
+            st.rerun()

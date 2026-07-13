@@ -1,25 +1,43 @@
 import streamlit as st
 import pandas as pd
-from modules.attendence import Attendance
-def show_attendance():
+from modules.result import Result
 
-    attendance = Attendance()
 
-    st.title("📅 Attendance Management")
+def calculate_grade(marks):
+
+    if marks >= 90:
+        return "A+"
+    elif marks >= 80:
+        return "A"
+    elif marks >= 70:
+        return "B+"
+    elif marks >= 60:
+        return "B"
+    elif marks >= 50:
+        return "C"
+    elif marks >= 40:
+        return "D"
+    else:
+        return "F"
+
+
+def show_results():
+
+    result = Result()
+
+    st.title("📊 Result Management")
 
     tab1, tab2, tab3, tab4 = st.tabs([
-        "➕ Mark Attendance",
-        "📋 View Records",
+        "➕ Add Result",
+        "📋 View Results",
         "🔍 Search",
         "🗑 Delete"
     ])
 
     # =====================================
-    # MARK ATTENDANCE
+    # ADD RESULT
     # =====================================
     with tab1:
-
-        st.subheader("Mark Attendance")
 
         student_id = st.number_input(
             "Student ID",
@@ -27,44 +45,51 @@ def show_attendance():
             step=1
         )
 
-        class_name = st.text_input("Class")
-
-        attendance_date = st.date_input("Attendance Date")
-
-        status = st.selectbox(
-            "Status",
-            ["Present", "Absent", "Late"]
+        exam_id = st.number_input(
+            "Exam ID",
+            min_value=1,
+            step=1
         )
+
+        marks = st.number_input(
+            "Marks Obtained",
+            min_value=0.0,
+            max_value=100.0
+        )
+
+        grade = calculate_grade(marks)
+
+        st.info(f"Grade : {grade}")
 
         remarks = st.text_area("Remarks")
 
-        if st.button("Save Attendance"):
+        if st.button("Add Result"):
 
-            attendance.mark_attendance(
+            result.add_result(
                 student_id,
-                class_name,
-                str(attendance_date),
-                status,
+                exam_id,
+                marks,
+                grade,
                 remarks
             )
 
-            st.success("Attendance Saved Successfully!")
+            st.success("Result Added Successfully!")
 
     # =====================================
-    # VIEW ATTENDANCE
+    # VIEW RESULTS
     # =====================================
     with tab2:
 
-        data = attendance.get_all_attendance()
+        data = result.get_all_results()
 
         if data:
 
             columns = [
-                "Attendance ID",
+                "Result ID",
                 "Student ID",
-                "Class",
-                "Date",
-                "Status",
+                "Exam ID",
+                "Marks",
+                "Grade",
                 "Remarks"
             ]
 
@@ -77,27 +102,27 @@ def show_attendance():
             )
 
         else:
-            st.info("No Attendance Records Found.")
+            st.info("No Results Found.")
 
     # =====================================
     # SEARCH
     # =====================================
     with tab3:
 
-        keyword = st.text_input("Search Attendance")
+        keyword = st.text_input("Search Result")
 
         if keyword:
 
-            data = attendance.search_attendance(keyword)
+            data = result.search_result(keyword)
 
             if data:
 
                 columns = [
-                    "Attendance ID",
+                    "Result ID",
                     "Student ID",
-                    "Class",
-                    "Date",
-                    "Status",
+                    "Exam ID",
+                    "Marks",
+                    "Grade",
                     "Remarks"
                 ]
 
@@ -110,28 +135,28 @@ def show_attendance():
                 )
 
             else:
-                st.warning("No Records Found.")
+                st.warning("Result Not Found.")
 
     # =====================================
     # DELETE
     # =====================================
     with tab4:
 
-        attendance_id = st.number_input(
-            "Attendance ID",
+        result_id = st.number_input(
+            "Result ID",
             min_value=1,
             step=1
         )
 
         confirm = st.checkbox(
-            "I confirm that I want to delete this record."
+            "I confirm that I want to delete this result."
         )
 
-        if st.button("Delete Attendance"):
+        if st.button("Delete Result"):
 
             if confirm:
-                attendance.delete_attendance(attendance_id)
-                st.success("Attendance Deleted Successfully!")
+                result.delete_result(result_id)
+                st.success("Result Deleted Successfully!")
             else:
                 st.warning("Please confirm before deleting.")
         
