@@ -96,6 +96,20 @@ CREATE TABLE IF NOT EXISTS library(
 )
 """)
         db.execute("""
+CREATE TABLE IF NOT EXISTS library_issues(
+    issue_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER NOT NULL,
+    book_id INTEGER NOT NULL,
+    issue_date DATE,
+    return_date DATE,
+    fine REAL DEFAULT 0,
+    status TEXT DEFAULT 'Issued'
+        CHECK(status IN ('Issued','Returned')),
+    FOREIGN KEY(student_id) REFERENCES students(student_id),
+    FOREIGN KEY(book_id) REFERENCES library(book_id)
+)
+""")
+        db.execute("""
 CREATE TABLE IF NOT EXISTS subjects(
     subject_id INTEGER PRIMARY KEY AUTOINCREMENT,
     subject_code TEXT UNIQUE NOT NULL,

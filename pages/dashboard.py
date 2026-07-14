@@ -76,7 +76,7 @@ def get_count(table_name):
 # Dashboard
 # ===============================
 def show_dashboard():
-
+    
 
     # CSS
     st.markdown("""
@@ -139,9 +139,13 @@ def show_dashboard():
 
     </style>
     """, unsafe_allow_html=True)
+        # ------------------------------
+        # ADMIN DASHBOARD STARTS HERE
+        # ------------------------------
 
-
-
+    students = get_count("students")
+    teachers = get_count("teachers")
+    parents = get_count("parents")
     students = get_count("students")
     teachers = get_count("teachers")
     parents = get_count("parents")

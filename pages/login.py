@@ -11,7 +11,17 @@ def show_login():
 
     st.title(f"🔐 {st.session_state.role} Login")
 
-    username = st.text_input("Username")
+    if st.session_state.role == "Student":
+        username = st.text_input("Admission Number")
+
+    elif st.session_state.role == "Teacher":
+        username = st.text_input("Employee ID")
+
+    elif st.session_state.role == "Parent":
+        username = st.text_input("Admission Number")
+
+    else:
+        username = st.text_input("Username")
 
     password = st.text_input(
         "Password",
@@ -40,12 +50,27 @@ def show_login():
 
                 if result["success"]:
 
+                 
+
+                    role = result["role"]
+
                     st.session_state.logged_in = True
                     st.session_state.user_id = result["id"]
                     st.session_state.username = result["username"]
-                    st.session_state.role = result["role"]
+                    st.session_state.role = role
 
-                    st.session_state.page = "dashboard"
+                    if role == "Admin":
+                        st.session_state.page = "admin_dashboard"
+
+                    elif role == "Teacher":
+                        st.session_state.page = "teacher_dashboard"
+
+                    elif role == "Student":
+                        st.session_state.page = "student_dashboard"
+
+                    elif role == "Parent":
+                        st.session_state.page = "parent_dashboard"
+
                     st.rerun()
 
                 else:

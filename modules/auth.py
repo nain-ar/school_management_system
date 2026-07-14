@@ -1,6 +1,6 @@
 import bcrypt
 from database.database import Database
-
+SCHOOL_NAME = "ABCPS"
 
 class Authentication:
 
@@ -59,35 +59,135 @@ class Authentication:
             "message": "Registration Successful."
         }
 
-    # -----------------------------
-    # Login
-    # -----------------------------
+    SCHOOL_NAME = "ABCPS"      # Change to your school name
     def login(self, username, password, role):
 
-        self.db.execute(
-            """
-            SELECT id, username, password, role
-            FROM users
-            WHERE username=? AND role=?
-            """,
-            (username, role)
-        )
+    # ----------------------------
+    # Admin Login
+    # ----------------------------
+        if role == "Admin":
 
-        user = self.db.fetchone()
+            self.db.execute("""
+                SELECT id, username, password, role
+                FROM users
+                WHERE username=? AND role='Admin'
+            """, (username,))
 
-        if not user:
+            user = self.db.fetchone()
+
+            if not user:
+                return {"success": False}
+
+            if self.verify_password(password, user[2]):
+                return {
+                    "success": True,
+                    "id": user[0],
+                    "username": user[1],
+                    "role": user[3]
+                }
+
             return {"success": False}
 
-        if self.verify_password(password, user[2]):
-            return {
-                "success": True,
-                "id": user[0],
-                "username": user[1],
-                "role": user[3]
-            }
+        # ----------------------------
+        # Student Login
+        # ----------------------------
+        elif role == "Student":
+
+            self.db.execute("""
+                SELECT student_id,
+                    admission_no,
+                    first_name,
+                    last_name
+                FROM students
+                WHERE admission_no=?
+            """, (username,))
+
+            student = self.db.fetchone()
+
+            if not student:
+                return {"success": False}
+
+            expected_password = f"{student[1]}@{SCHOOL_NAME}"
+
+            if password == expected_password:
+                return {
+    "success": True,
+    "id": student[0],
+    "username": student[2] + " " + (student[3] or ""),
+    "admission_no": student[1],
+    "role": "Student"
+}
+
+            return {"success": False}
+
+        # ----------------------------
+        # Teacher Login
+        # ----------------------------
+        elif role == "Teacher":
+
+            self.db.execute("""
+                SELECT teacher_id,
+                    employee_id,
+                    first_name,
+                    last_name,
+                    department,
+                    joining_date
+                FROM teachers
+                WHERE employee_id=?
+            """, (username,))
+
+            teacher = self.db.fetchone()
+
+            if not teacher:
+                return {"success": False}
+
+            joining = str(teacher[5]).replace("-", "")
+
+            expected_password = f"{teacher[4]}@{SCHOOL_NAME}@{joining}"
+
+            if password == expected_password:
+                return {
+                    "success": True,
+                    "id": teacher[0],
+                    "username": teacher[2] + " " + (teacher[3] or ""),
+                    "role": "Teacher"
+                }
+
+            return {"success": False}
+
+        # ----------------------------
+        # Parent Login
+        # ----------------------------
+        elif role == "Parent":
+
+            self.db.execute("""
+                SELECT
+                    p.parent_id,
+                    p.phone,
+                    s.admission_no,
+                    p.father_name
+                FROM parents p
+                JOIN students s
+                ON p.student_id = s.student_id
+                WHERE s.admission_no=?
+            """, (username,))
+
+            parent = self.db.fetchone()
+
+            if not parent:
+                return {"success": False}
+
+            if password == parent[1]:
+                return {
+                    "success": True,
+                    "id": parent[0],
+                    "username": parent[3],
+                    "role": "Parent"
+                }
+
+            return {"success": False}
 
         return {"success": False}
-
     # -----------------------------
     # Close Database
     # -----------------------------
