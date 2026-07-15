@@ -68,21 +68,21 @@ def show_student_dashboard():
         dashboard_card("My Profile", "👤", "student_profile")
 
     with c2:
-        dashboard_card("Attendance", "📅", "attendance")
+        dashboard_card("Attendance", "📅", "student_attendance")
 
     with c3:
-        dashboard_card("Results", "📝", "results")
+        dashboard_card("Results", "📝", "student_results")
 
     c4, c5, c6 = st.columns(3)
 
     with c4:
-        dashboard_card("Fees", "💰", "fees")
+        dashboard_card("Fees", "💰", "student_fees")
 
     with c5:
-        dashboard_card("Library", "📚", "library")
+        dashboard_card("Library", "📚", "student_library")
 
     with c6:
-        dashboard_card("Notices", "📢", "notice")
+        dashboard_card("Notices", "📢", "student_notice")
    
 
     st.divider()

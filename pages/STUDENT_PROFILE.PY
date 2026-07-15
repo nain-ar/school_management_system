@@ -13,7 +13,8 @@ def show_student_profile():
         return
 
     # Logged-in student's admission number
-    admission_no = st.session_state.username
+    # admission_no = st.session_state.username
+    admission_no = st.session_state.admission_no
 
     db.execute("""
         SELECT

@@ -58,7 +58,7 @@ def show_login():
                     st.session_state.user_id = result["id"]
                     st.session_state.username = result["username"]
                     st.session_state.role = role
-
+                    
                     if role == "Admin":
                         st.session_state.page = "admin_dashboard"
 
@@ -67,6 +67,8 @@ def show_login():
 
                     elif role == "Student":
                         st.session_state.page = "student_dashboard"
+                        if role == "Student":
+                            st.session_state.admission_no = result["admission_no"]
 
                     elif role == "Parent":
                         st.session_state.page = "parent_dashboard"

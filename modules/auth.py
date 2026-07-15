@@ -109,14 +109,16 @@ class Authentication:
 
             expected_password = f"{student[1]}@{SCHOOL_NAME}"
 
+
+# }  
             if password == expected_password:
                 return {
-    "success": True,
-    "id": student[0],
-    "username": student[2] + " " + (student[3] or ""),
-    "admission_no": student[1],
-    "role": "Student"
-}
+        "success": True,
+        "id": student[0],
+        "username": student[1],   # Admission Number
+        "admission_no": student[1],
+        "role": "Student"
+    }
 
             return {"success": False}
 
@@ -143,7 +145,7 @@ class Authentication:
 
             joining = str(teacher[5]).replace("-", "")
 
-            expected_password = f"{teacher[4]}@{SCHOOL_NAME}@{joining}"
+            expected_password = f"{teacher[3]}@{SCHOOL_NAME}"
 
             if password == expected_password:
                 return {
@@ -163,13 +165,13 @@ class Authentication:
             self.db.execute("""
                 SELECT
                     p.parent_id,
+                    p.father_name,
                     p.phone,
-                    s.admission_no,
-                    p.father_name
+                    s.admission_no
                 FROM parents p
                 JOIN students s
-                ON p.student_id = s.student_id
-                WHERE s.admission_no=?
+                    ON p.student_id = s.student_id
+                WHERE s.admission_no = ?
             """, (username,))
 
             parent = self.db.fetchone()
@@ -177,17 +179,19 @@ class Authentication:
             if not parent:
                 return {"success": False}
 
-            if password == parent[1]:
+            # Password = Parent's registered phone number
+            expected_password = str(parent[2])
+
+            if password == expected_password:
                 return {
                     "success": True,
                     "id": parent[0],
-                    "username": parent[3],
+                    "username": parent[1],
+                    "admission_no": parent[3],
                     "role": "Parent"
                 }
 
             return {"success": False}
-
-        return {"success": False}
     # -----------------------------
     # Close Database
     # -----------------------------
