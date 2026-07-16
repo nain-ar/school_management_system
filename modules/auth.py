@@ -125,17 +125,28 @@ class Authentication:
         # ----------------------------
         # Teacher Login
         # ----------------------------
+  
+
         elif role == "Teacher":
 
             self.db.execute("""
-                SELECT teacher_id,
+                SELECT
+                    teacher_id,
                     employee_id,
                     first_name,
                     last_name,
+                    gender,
+                    dob,
+                    phone,
+                    email,
+                    address,
+                    qualification,
                     department,
-                    joining_date
+                    designation,
+                    joining_date,
+                    salary
                 FROM teachers
-                WHERE employee_id=?
+                WHERE employee_id = ?
             """, (username,))
 
             teacher = self.db.fetchone()
@@ -143,20 +154,20 @@ class Authentication:
             if not teacher:
                 return {"success": False}
 
-            joining = str(teacher[5]).replace("-", "")
-
+            # Password = LastName@ABCPS
             expected_password = f"{teacher[3]}@{SCHOOL_NAME}"
 
             if password == expected_password:
+
                 return {
                     "success": True,
-                    "id": teacher[0],
-                    "username": teacher[2] + " " + (teacher[3] or ""),
+                    "id": teacher[0],                 # teacher_id
+                    "employee_id": teacher[1],        # employee_id
+                    "username": f"{teacher[2]} {teacher[3] or ''}".strip(),
                     "role": "Teacher"
                 }
 
             return {"success": False}
-
         # ----------------------------
         # Parent Login
         # ----------------------------

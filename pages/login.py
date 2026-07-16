@@ -63,15 +63,20 @@ def show_login():
                         st.session_state.page = "admin_dashboard"
 
                     elif role == "Teacher":
+
                         st.session_state.page = "teacher_dashboard"
+
+                        st.session_state.teacher_id = result["id"]
+
+                        st.session_state.employee_id = result["employee_id"]
 
                     elif role == "Student":
                         st.session_state.page = "student_dashboard"
-                        if role == "Student":
-                            st.session_state.admission_no = result["admission_no"]
+                        st.session_state.admission_no = result["admission_no"]
 
                     elif role == "Parent":
                         st.session_state.page = "parent_dashboard"
+                        st.session_state.admission_no = result["admission_no"]
 
                     st.rerun()
 
